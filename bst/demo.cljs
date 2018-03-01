@@ -31,15 +31,20 @@
   ([node] (in-order-walk node '() []))
   ([{:keys [value left right] :as node} [new-node & new-nodes :as nodes] output]
    (cond
-     node           (recur left (conj nodes node) output)
-     new-node       (recur (:right new-node) new-nodes (conj output (:value new-node)))
-     :else          output)))
+     node           (recur left                               ;; if we are called directly on a node attempt to
+                           (conj nodes node)                  ;; walk to the left and add current node to stack
+                           output)
+     new-node       (recur (:right new-node)                  ;; if node is nil and we have a new node on the stack
+                           new-nodes                          ;; pop off the stack, add to output, and walk to the right
+                           (conj output (:value new-node)))
+     :else          output)))                                 ;; otherwise we have no node and no stack, just output
 
 ;; quick demo
 (defn -main [& args]
-  (let [random-list (n-rand-ints 50 10)
-        example-tree (insert-list nil random-list)]
+  (let [random-list  (n-rand-ints 50 10)
+        example-tree (insert-list nil random-list)
+        walk-output  (in-order-walk example-tree)]
     (println "List: "  random-list)
-    (println "Walk: "  (in-order-walk example-tree))
+    (println "Walk: "  walk-output)
     (println "Tree:")
     (pprint example-tree)))
