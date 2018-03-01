@@ -31,11 +31,11 @@
   ([node] (in-order-walk node '() []))
   ([{:keys [value left right] :as node} [new-node & new-nodes :as nodes] output]
    (cond
-     node           (recur left                               ;; if we are called directly on a node attempt to
-                           (conj nodes node)                  ;; walk to the left and add current node to stack of nodes to revisit
+     node           (recur left                               ;; if we are called directly on a node attempt to walk to
+                           (conj nodes node)                  ;; the left and add current node to stack of nodes to revisit
                            output)
-     new-node       (recur (:right new-node)                  ;; if node is nil and we have a node on the stack
-                           new-nodes                          ;; pop itoff the stack, add its value to output, and walk to its right
+     new-node       (recur (:right new-node)                  ;; if node is nil and we have a node on the stack, pop it off,
+                           new-nodes                          ;; add its value to output, and walk to its right
                            (conj output (:value new-node)))
      :else          output)))                                 ;; otherwise we have no node and no nodes on the stack, just output
 
