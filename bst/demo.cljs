@@ -32,12 +32,12 @@
   ([{:keys [value left right] :as node} [new-node & new-nodes :as nodes] output]
    (cond
      node           (recur left                               ;; if we are called directly on a node attempt to
-                           (conj nodes node)                  ;; walk to the left and add current node to stack
+                           (conj nodes node)                  ;; walk to the left and add current node to stack of nodes to revisit
                            output)
-     new-node       (recur (:right new-node)                  ;; if node is nil and we have a new node on the stack
-                           new-nodes                          ;; pop off the stack, add to output, and walk to the right
+     new-node       (recur (:right new-node)                  ;; if node is nil and we have a node on the stack
+                           new-nodes                          ;; pop itoff the stack, add its value to output, and walk to its right
                            (conj output (:value new-node)))
-     :else          output)))                                 ;; otherwise we have no node and no stack, just output
+     :else          output)))                                 ;; otherwise we have no node and no nodes on the stack, just output
 
 ;; quick demo
 (defn -main [& args]
